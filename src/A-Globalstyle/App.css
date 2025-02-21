@@ -1,0 +1,147 @@
+.Mainlayout {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+
+    height: 100vh;
+    background-color: #F5F5F7;
+}
+
+
+.layoutHeaderSection {
+    .section2 {
+
+        ul {
+            display: flex;
+            list-style: none;
+            margin: auto;
+
+            li {
+                background-color: white;
+                margin: auto 10px;
+                padding: 4px 10px;
+                font-size: 16px;
+                font-weight: 500;
+                border-radius: 10px;
+                cursor: pointer;
+                box-shadow: 0px 0px 3px 1px #0000000d;
+            }
+
+            li:hover {
+                background-color: black;
+                color: white;
+                box-shadow: 0px 0px 6x 1px rgba(0, 0, 0, 0.251);
+            }
+        }
+    }
+}
+
+
+.layoutBodySection {
+    height: 90vh;
+
+    .inputSection {
+        input {
+            box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.164);
+        }
+
+        button{
+            width: 50%;
+        }
+    }
+
+
+    .outputSection {
+        .cardContainer {
+            background-color: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.193);
+        }
+    }
+}
+
+@media (max-width : 430px) {
+
+    .layoutHeaderSection {
+
+        .section1{
+            h2{
+                font-size: 18px;
+            }
+
+        }
+
+        .section2 {
+
+    
+            ul {
+                display: flex;
+                list-style: none;
+                margin: auto;
+                justify-content: flex-start;
+                padding-left: 0px;
+    
+                li {
+                    background-color: white;
+                    margin: auto 7px;
+                    padding: 6px 10px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    box-shadow: 0px 0px 3px 1px #0000000d;
+                }
+    
+                li:hover {
+                    background-color: black;
+                    color: white;
+                    box-shadow: 0px 0px 6x 1px rgba(0, 0, 0, 0.251);
+                }
+            }
+        }
+    }
+
+
+
+
+
+    .layoutBodySection {
+        height: 105vh;
+
+        .inputSection {
+            input {
+                box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.164);
+            }
+            button{
+                font-size: 14px !important;
+                width: 100%;
+            }
+        }
+
+
+        .outputSection {
+            .cardContainer {
+                margin: auto;
+                background-color: white;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.193);
+
+
+                .cardSection1{
+                    h4{
+                        font-size: 16px;
+                    }
+                    p{
+                        font-size: 12px;
+                    }
+                }
+
+                .cardSection2{
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
