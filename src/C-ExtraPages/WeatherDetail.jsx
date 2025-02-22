@@ -1,7 +1,7 @@
 
 
 import '../A-Globalstyle/WeatherPage.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import LayoutHeader from '../B-LayoutSection/LayoutHeader.jsx';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -10,294 +10,98 @@ import { useStore } from '../a-UseContext/Store.jsx';
 
 const WeatherDetail = () => {
 
-    const { city } = useParams();
-    const { url, apiKey } = useStore();
+
+    const nav = useNavigate();
 
 
-    const [weather, setWeather] = useState(null);
-
+    const { city, lat, long } = useParams();
     const [data, setData] = useState();
 
-
-    const [time, setTime] = useState("");
-
-    const FindDayorNight = (sunrise, sunset, timezone) => {
-        let nowUTC = Math.floor(Date.now() / 1000);
-        let localTime = nowUTC + timezone;
-
-        if (localTime < sunrise) {
-            setTime("Night")
-        } else if (localTime >= sunrise && localTime < (sunrise + (sunset - sunrise) / 2)) {
-            setTime("Day")
-        } else if (localTime >= (sunrise + (sunset - sunrise) / 2) && localTime < sunset) {
-            setTime("Day")
-        } else {
-            setTime("Night");
-        }
-    }
-
-    const abc = () => {
+    console.log(city, lat, long);
 
 
 
-        let imageURl = "";
-        let timestamp = null;
-
-        let sunrise = null;
-        let sunset = null;
-
-
-
-
-        if (data) {
-
-            let clouds = data.clouds.all;
-            let temp = data.main.temp;
-            let weatherType = data.weather[0].main.toLowerCase();
-            let windspeed = data.wind.speed;
-
-
-
-
-            timestamp = data.timezone;
-            sunrise = data.sys.sunrise;
-            sunset = data.sys.sunset;
-
-            FindDayorNight(sunrise, sunset, timestamp);
-
-
-            if (time === "Day") {
-
-                if (weatherType === "haze") {
-                    imageURl = "/assets/day_haze.png";
-                }
-
-                else if (weatherType === "rain" || weatherType === "drizzle") {
-                    if (temp > 25) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--heavy-rainy-weather-raining-and-climate-pack-nature-icons-6666091.png?f=webp";
-                    }
-                    else if (temp > 15) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-thunder-heavy-thunderstorm-weather-and-climate-pack-nature-icons-6666108.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-thunder-heavy-thunderstorm-weather-and-climate-pack-nature-icons-6666108.png?f=webp";
-                    }
-                }
-
-                else if (weatherType === "snow") {
-                    imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/snowy-weather-forecast-3d-icon-download-in-png-blend-fbx-gltf-file-formats--winter-snowflakes-cold-snowfall-icy-pack-nature-icons-8460076.png?f=webp";
-                }
-
-                else if (clouds <= 10 && weatherType === "clear") {
-                    if (temp > 30) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/scorching-sun-3d-icon-download-in-png-blend-fbx-gltf-file-formats--heat-intense-burn-sky-dry-pack-nature-icons-10661257.png?f=webp";
-                    }
-                    else if (temp > 20) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/sun-3d-icon-download-in-png-blend-fbx-gltf-file-formats--sunlight-sunny-day-nature-weather-forecasts-pack-icons-6192241.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/sun-3d-icon-download-in-png-blend-fbx-gltf-file-formats--sunlight-sunny-day-nature-weather-forecasts-pack-icons-6192241.png?f=webp";
-                    }
-                }
-
-                else if (clouds <= 10 && weatherType === "smoke") {
-                    imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/sunny-cloud-weather-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cold-day-decoration-beach-snow-report-pack-nature-icons-8139267.png?f=webp";
-                }
-
-                else if (clouds > 10 && data.clouds.all <= 40) {
-                    if (temp > 30) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/partially-cloudy-day-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-sun-weather-pack-nature-icons-6267507.png?f=webp";
-                    }
-                    else if (temp > 20) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/partially-cloudy-day-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-sun-weather-pack-nature-icons-6267507.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/partially-cloudy-day-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-sun-weather-pack-nature-icons-6267507.png?f=webp";
-                    }
-                }
-                else if (clouds <= 70 && clouds > 40) {
-                    if (winds < 5) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/weather-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-forecast-nature-general-ui-pack-user-interface-icons-5376613.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cold-temperature-condition-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--heavy-rain-raining-cloudy-cloud-weather-and-pack-nature-illustrations-4450749.png?f=webp";
-                    }
-                }
-
-                else if (clouds > 70 && clouds <= 90) {
-
-                    if (weatherType === "rain" || weatherType === "drizzle") {
-                        if (temp > 25) {
-                            imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/rainfall-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rainy-weather-rainstorm-day-season-pack-nature-icons-9123645.png?f=webp";
-                        }
-                        else if (temp > 15) {
-                            imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/rainfall-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rainy-weather-rainstorm-day-season-pack-nature-icons-9123645.png?f=webp";
-                        }
-                        else {
-                            imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/windy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--drizzle-wind-rainy-cloud-weather-pack-nature-icons-6267496.png?f=webp";
-                        }
-                    }
-
-                    else if (weatherType === "snow") {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/snowy-weather-forecast-3d-icon-download-in-png-blend-fbx-gltf-file-formats--winter-snowflakes-cold-snowfall-icy-pack-nature-icons-8460076.png?f=webp";
-                    }
-
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/clouds-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--cloud-white-weather-pack-nature-illustrations-3803105.png?f=webp";
-                    }
-
-
-                }
-
-                else if (clouds > 90) {
-                    if (windspeed > 10) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/windy-thunder-storm-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rain-cloudy-cloud-weather-pack-nature-icons-6267497.png?f=webp";
-                    }
-                    else if (windspeed > 5) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-weather-3d-icon-download-in-png-blend-fbx-gltf-file-formats--nature-cloud-pack-icons-6328505.png?f=webp";
-                    }
-                }
-
-
-                else {
-                    imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/sun-3d-icon-download-in-png-blend-fbx-gltf-file-formats--sunlight-sunny-day-nature-weather-forecasts-pack-icons-6192241.png?f=webp";
-                }
-            }
-
-            else if (time === "Night" || time === "Evening") {
-
-                if (weatherType == "haze") {
-                    imageURl = "/assets/night_haze.png"
-                }
-
-                else if (weatherType === "rain" || weatherType === "drizzle") {
-                    if (temp > 25) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--heavy-rainy-weather-raining-and-climate-pack-nature-icons-6666091.png?f=webp";
-                    }
-                    else if (temp > 15) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-thunder-heavy-thunderstorm-weather-and-climate-pack-nature-icons-6666108.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-thunder-heavy-thunderstorm-weather-and-climate-pack-nature-icons-6666108.png?f=webp";
-                    }
-                }
-
-                else if (weatherType === "snow") {
-                    imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/snowy-weather-forecast-3d-icon-download-in-png-blend-fbx-gltf-file-formats--winter-snowflakes-cold-snowfall-icy-pack-nature-icons-8460076.png?f=webp";
-                }
-
-                else if (clouds <= 10 && weatherType === "clear") {
-                    if (temp > 30) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/clear-night-3d-icon-download-in-png-blend-fbx-gltf-file-formats--half-moon-mode-weather-forecast-pack-nature-icons-9102488.png?f=webp";
-                    }
-                    else if (temp > 20) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/half-moon-3d-icon-download-in-png-blend-fbx-gltf-file-formats--night-weather-pack-nature-icons-5306217.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/clear-night-with-star-and-moon-3d-icon-download-in-png-blend-fbx-gltf-file-formats--weather-pack-icons-8786769.png?f=webp";
-                    }
-                }
-
-                else if (clouds <= 10 && weatherType === "smoke") {
-                    imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/clear-night-with-star-and-moon-3d-icon-download-in-png-blend-fbx-gltf-file-formats--weather-pack-icons-8786769.png?f=webp";
-                }
-
-                else if (clouds > 10 && data.clouds.all <= 40) {
-                    if (temp > 30) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-night-3d-icon-download-in-png-blend-fbx-gltf-file-formats--moon-full-weather-forecast-pack-nature-icons-4995246.png?f=webp";
-                    }
-                    else if (temp > 20) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-night-3d-icon-download-in-png-blend-fbx-gltf-file-formats--moon-full-weather-forecast-pack-nature-icons-4995246.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-night-3d-icon-download-in-png-blend-fbx-gltf-file-formats--moon-full-weather-forecast-pack-nature-icons-4995246.png?f=webp";
-                    }
-                }
-                else if (clouds <= 70 && clouds > 40) {
-                    if (winds < 5) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-wind-3d-icon-download-in-png-blend-fbx-gltf-file-formats--forecast-season-weather-pack-vol1-nature-icons-6777727.png?f=webp";
-                    }
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-wind-3d-icon-download-in-png-blend-fbx-gltf-file-formats--air-weather-windy-cloud-pack-nature-icons-6431190.png?f=webp";
-                    }
-                }
-
-                else if (clouds > 70 && clouds <= 90) {
-
-                    if (weatherType === "rain" || weatherType === "drizzle") {
-                        if (temp > 25) {
-                            imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--heavy-rainy-weather-raining-and-climate-pack-nature-icons-6666091.png?f=webp";
-                        }
-                        else if (temp > 15) {
-                            imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-thunder-heavy-thunderstorm-weather-and-climate-pack-nature-icons-6666108.png?f=webp";
-                        }
-                        else {
-                            imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/cloudy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-thunder-heavy-thunderstorm-weather-and-climate-pack-nature-icons-6666108.png?f=webp";
-                        }
-                    }
-
-                    else if (weatherType === "snow") {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/snowy-weather-forecast-3d-icon-download-in-png-blend-fbx-gltf-file-formats--winter-snowflakes-cold-snowfall-icy-pack-nature-icons-8460076.png?f=webp";
-                    }
-
-                    else {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/clouds-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--cloud-white-weather-pack-nature-illustrations-3803105.png?f=webp";
-                    }
-
-
-                }
-
-                else if (clouds > 90) {
-                    if (windspeed > 10) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/windy-thunder-storm-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rain-cloudy-cloud-weather-pack-nature-icons-6267497.png?f=webp";
-                    }
-                    else if (windspeed > 5) {
-                        imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/windy-cloud-3d-icon-download-in-png-blend-fbx-gltf-file-formats--weather-wind-breeze-pack-sign-symbols-icons-10741943.png?f=webp";
-                    }
-                }
-
-
-                else {
-                    imageURl = "https://cdn3d.iconscout.com/3d/premium/thumb/sun-3d-icon-download-in-png-blend-fbx-gltf-file-formats--sunlight-sunny-day-nature-weather-forecasts-pack-icons-6192241.png?f=webp";
-                }
-            }
-
-
-        }
-
-
-        setWeather(imageURl);
-
-    };
-
-
-    const FetchData = async () => {
+    const Fetch = async () => {
         try {
-            const res = await axios.get(`${url}?q=${city}&appid=${apiKey}&units=metric`);
-            setData(res.data);
-            
+            let res = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`);
+            setData(res.data.current);
         }
         catch (err) {
             console.log(err);
         }
-    };
+    }
 
 
-   
 
 
     useEffect(() => {
-        FetchData();
-        
+        Fetch();
     }, [city]);
 
 
-    useEffect(()=>{
-        abc();
-    });
+
+    const [weather, setWeather] = useState(null);
 
 
-   
+    useEffect(() => {
+
+        let imgUrl = "";
+
+        if (data) {
+            let weatherType = data.weather_code;
+
+            if (data.is_day == 1) {
+
+                if (weatherType === 0) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/day-3d-icon-download-in-png-blend-fbx-gltf-file-formats--sun-summer-sunny-bright-hot-weather-pack-nature-icons-6138927.png?f=webp";
+                }
+                else if (weatherType >= 1 && weatherType <= 3) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/partially-cloudy-day-3d-icon-download-in-png-blend-fbx-gltf-file-formats--cloud-sun-weather-pack-nature-icons-6267507.png?f=webp";
+                }
+                else if (weatherType === 45 || weatherType === 48) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/foggy-weather-3d-icon-download-in-png-blend-fbx-gltf-file-formats--fog-cloud-pack-icons-6328506.png?f=webp";
+                }
+                else if ([51, 53, 55].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/drizzle-thunder-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rainfall-weather-pack-sunrise-sunset-icons-8167889.png?f=webp";
+                }
+                else if ([61, 63, 65].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--weather-storm-wet-seasonal-drizzle-autumn-pack-nature-icons-10331217.png?f=webp";
+                }
+                else if ([66, 67].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/freezing-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--weather-icy-winter-snow-cold-pack-nature-icons-10912186.png?f=webp";
+                }
+                else if ([71, 73, 75].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/snow-fall-3d-icon-download-in-png-blend-fbx-gltf-file-formats--falling-heavy-snowfall-shower-weather-pack-nature-icons-5842430.png?f=webp";
+                }
+                else if (weatherType === 77) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/snow-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--snowy-heavy-light-fall-foggy-night-weather-pack-nature-illustrations-2754894.png?f=webp";
+                }
+                else if ([80, 81, 82].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/heavy-rain-3d-icon-download-in-png-blend-fbx-gltf-file-formats--hardrain-rainy-weather-thunderstorm-environment-pack-nature-icons-8232268.png?f=webp";
+                }
+                else if ([85, 86].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/heavy-snow-3d-icon-download-in-png-blend-fbx-gltf-file-formats--freezing-rain-hail-weather-snowfall-scattered-blizzard-pack-icons-6328522.png?f=webp";
+                }
+                else if ([95, 96, 99].includes(weatherType)) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/thunder-3d-icon-download-in-png-blend-fbx-gltf-file-formats--thunderstorm-storm-weather-pack-nature-icons-6551907.png?f=webp";
+                }
+            }
+
+            else if (data.is_day == 0) {
+                if (weatherType === 0) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/night-3d-icon-download-in-png-blend-fbx-gltf-file-formats--moon-light-stars-half-weather-pack-nature-icons-5668682.png?f=webp";
+                }
+                else if (weatherType >= 1 && weatherType <= 3) {
+                    imgUrl = "https://cdn3d.iconscout.com/3d/premium/thumb/night-cloudy-3d-icon-download-in-png-blend-fbx-gltf-file-formats--day-cloud-sun-forecast-sunny-weather-pack-nature-icons-5306213.png?f=webp";
+                }
+            }
+        }
+
+        setWeather(imgUrl);
+
+    }, [data])
+
+
 
     return (
         <>
@@ -307,6 +111,8 @@ const WeatherDetail = () => {
 
                     <LayoutHeader />
 
+
+
                     {
                         data &&
                         <div className="col-11 m-auto">
@@ -314,12 +120,12 @@ const WeatherDetail = () => {
 
 
 
-                                <div className={time === "Day" ? "col-md-7 col-11 m-auto my-3 mb-5 py-5 weatherCard" : "col-md-7 col-11 m-auto my-3 mb-5 py-5 weatherCard bg-dark text-white"}>
+                                <div className={data.is_day === 1 ? "col-md-7 col-11 m-auto my-3 mb-5 py-5 weatherCard" : "col-md-7 col-11 m-auto my-3 mb-5 py-5 weatherCard bg-dark text-white"}>
 
                                     <div className="row">
 
                                         <div className="col-md-10 col-11 m-auto">
-                                            <h3 className='text-center'>{time} - {city} Weather ({data.weather[0].main})</h3>
+                                            <h3 className='text-center'>{city} Weather </h3>
                                             <div className="col-md-5 col-7 m-auto pb-4">
                                                 <img src={weather} alt="" className='d-block w-100' />
                                             </div>
@@ -342,7 +148,7 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.main.temp} <sup>o</sup>C</p>
+                                                                <p>{data.temperature_2m} <sup>o</sup>C</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -355,7 +161,7 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.main.feels_like} <sup>o</sup>C</p>
+                                                                <p>{data.apparent_temperature} <sup>o</sup>C</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -367,7 +173,19 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.main.humidity} %</p>
+                                                                <p>{data.relative_humidity_2m} %</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-md-10 col-12 m-auto">
+                                                        <div className="row">
+                                                            <div className="col-7">
+                                                                <p><b>SeaLevel Pressure :</b></p>
+                                                            </div>
+
+                                                            <div className="col-5">
+                                                                <p>{data.pressure_msl} hPa</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -375,38 +193,17 @@ const WeatherDetail = () => {
                                                     <div className="col-md-10 col-12 m-auto">
                                                         <div className="row">
                                                             <div className="col-6">
-                                                                <p><b>Pressure :</b></p>
+                                                                <p><b>Surface Pressure :</b></p>
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.main.pressure} hPa</p>
+                                                                <p>{data.surface_pressure} hPa</p>
                                                             </div>
                                                         </div>
                                                     </div>
 
-                                                    <div className="col-md-10 col-12 m-auto">
-                                                        <div className="row">
-                                                            <div className="col-6">
-                                                                <p><b>Sea Level :</b></p>
-                                                            </div>
 
-                                                            <div className="col-6">
-                                                                <p>{data.main.sea_level} hPa</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-md-10 col-12 m-auto">
-                                                        <div className="row">
-                                                            <div className="col-6">
-                                                                <p><b>Ground Level :</b></p>
-                                                            </div>
-
-                                                            <div className="col-6">
-                                                                <p>{data.main.grnd_level} hPa</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    
 
 
                                                 </div>
@@ -425,23 +222,11 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.clouds.all} %</p>
+                                                                <p>{data.cloud_cover} %</p>
                                                             </div>
                                                         </div>
                                                     </div>
 
-
-                                                    <div className="col-md-10 col-12 m-auto">
-                                                        <div className="row">
-                                                            <div className="col-6">
-                                                                <p><b>Description :</b></p>
-                                                            </div>
-
-                                                            <div className="col-6">
-                                                                <p style={{ textTransform: "capitalize" }}>{data.weather[0].description}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
 
                                                     <div className="col-md-10 col-12 m-auto">
                                                         <div className="row">
@@ -450,7 +235,7 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.wind.speed} m/s</p>
+                                                                <p>{data.wind_speed_10m} km/h</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -462,7 +247,7 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-6">
-                                                                <p>{data.wind.deg} <sup>o</sup></p>
+                                                                <p>{data.wind_direction_10m} <sup>o</sup></p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -475,7 +260,33 @@ const WeatherDetail = () => {
                                                             </div>
 
                                                             <div className="col-md-6 col-5">
-                                                                <p>{data.wind.gust} m/s</p>
+                                                                <p>{data.wind_gusts_10m} km/h</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className="col-md-10 col-12 m-auto">
+                                                        <div className="row">
+                                                            <div className="col-6">
+                                                                <p><b>Rain :</b></p>
+                                                            </div>
+
+                                                            <div className="col-6">
+                                                                <p>{data.rain} mm</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className="col-md-10 col-12 m-auto">
+                                                        <div className="row">
+                                                            <div className="col-6">
+                                                                <p><b>Snow :</b></p>
+                                                            </div>
+
+                                                            <div className="col-6">
+                                                                <p>{data.snowfall} cm</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -494,6 +305,11 @@ const WeatherDetail = () => {
                                         </div>
 
 
+                                            <div className="col-6 m-auto text-center mt-4">
+                                                <button className='btn btn-success fw-bold mx-4' onClick={()=>nav(`/weather-app/forecast/${city}/${lat}/${long}`)}    >See Weather Forecast</button>
+                                                <button className='btn btn-danger fw-bold' onClick={()=>nav(-1)}>Go back</button>
+                                            </div>
+
 
 
                                     </div>
@@ -503,6 +319,8 @@ const WeatherDetail = () => {
                             </div>
                         </div>
                     }
+
+
 
 
 

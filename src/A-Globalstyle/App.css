@@ -1,10 +1,19 @@
+.FrontendPage {
+    height: 100vh;
+    background: linear-gradient(to bottom, #0f172a, #3b82f6, #9333ea, #ec4899);
+}
+
+
+
+
 .Mainlayout {
     overflow-x: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
 
     height: 100vh;
-    background-color: #F5F5F7;
+    background: linear-gradient(to bottom, #0f172a, #3b82f6, #9333ea, #ec4899);
+    color: white;
 }
 
 
@@ -18,6 +27,7 @@
 
             li {
                 background-color: white;
+                color: black;
                 margin: auto 10px;
                 padding: 4px 10px;
                 font-size: 16px;
@@ -45,10 +55,21 @@
             box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.164);
         }
 
-        button{
+        button {
             width: 50%;
         }
     }
+}
+
+
+.layoutBodyWeatherCardSection {
+    background: linear-gradient(to bottom, #0f172a, #3b82f6, #9333ea, #ec4899);
+
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
 
 
     .outputSection {
@@ -61,12 +82,35 @@
     }
 }
 
+
+
 @media (max-width : 430px) {
+
+
+    .FrontendPage {
+        height: 100vh;
+        background: linear-gradient(to bottom, #0f172a, #3b82f6, #9333ea, #ec4899);
+
+        padding-top: 20vh;
+        
+        h1{
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        button{
+            width: 100% !important;
+            font-size: 20px !important;
+        }
+    }
+
+
+
 
     .layoutHeaderSection {
 
-        .section1{
-            h2{
+        .section1 {
+            h2 {
                 font-size: 18px;
             }
 
@@ -74,14 +118,14 @@
 
         .section2 {
 
-    
+
             ul {
                 display: flex;
                 list-style: none;
                 margin: auto;
                 justify-content: flex-start;
                 padding-left: 0px;
-    
+
                 li {
                     background-color: white;
                     margin: auto 7px;
@@ -92,7 +136,7 @@
                     cursor: pointer;
                     box-shadow: 0px 0px 3px 1px #0000000d;
                 }
-    
+
                 li:hover {
                     background-color: black;
                     color: white;
@@ -113,7 +157,8 @@
             input {
                 box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.164);
             }
-            button{
+
+            button {
                 font-size: 14px !important;
                 width: 100%;
             }
@@ -129,16 +174,17 @@
                 box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.193);
 
 
-                .cardSection1{
-                    h4{
+                .cardSection1 {
+                    h4 {
                         font-size: 16px;
                     }
-                    p{
+
+                    p {
                         font-size: 12px;
                     }
                 }
 
-                .cardSection2{
+                .cardSection2 {
                     text-align: center;
                 }
             }

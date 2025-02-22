@@ -13,26 +13,9 @@ const LayoutHeader = () => {
     <>
 
       <div className="col-12 layoutHeaderSection ">
-        <div className="col-11 m-auto py-3">
-
-          <div className="row">
-
-            <div className="col-md-4 col-5 section1">
-              <h2 className='text-center'>Weather App</h2>
-            </div>
-
-            <div className="col-md-8 col-7 section2 m-auto">
-              <ul>
-                  <li onClick={()=>nav('/')}>Home</li>
-                  <li>Options 2</li>
-              </ul>
-            </div>
-
-          </div>
-
-
+        <div className="col-sm-5 col-10 m-auto" onClick={()=>nav('/')}>
+          <img src="https://cdn3d.iconscout.com/3d/premium/thumb/drizzle-weather-3d-icon-download-in-png-blend-fbx-gltf-file-formats--rain-cloud-pack-icons-5753008.png?f=webp" alt="weather" className='d-block w-100' />
         </div>
-        <hr />
       </div>
 
     </>

@@ -4,12 +4,15 @@
     overflow-x: hidden;
     overflow-y: scroll;
     scrollbar-width: none;
+    color: white;
 
     height: 100vh;
-    background-color: #F5F5F7;
+    background: linear-gradient(to bottom, #0f172a, #3b82f6, #9333ea, #ec4899);
+
 
 
     .weatherCard{
+        color: black;
         background-color: white;
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.27);
         border-radius: 20px;
