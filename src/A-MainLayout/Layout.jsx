@@ -3,7 +3,6 @@
 import React from 'react'
 import LayoutHeader from '../B-LayoutSection/LayoutHeader';
 import LayoutBody from '../B-LayoutSection/LayoutBody';
-import LayoutFooter from '../B-LayoutSection/LayoutFooter';
 
 const Layout = () => {
   return (
@@ -15,8 +14,6 @@ const Layout = () => {
                 <LayoutHeader/>
 
                 <LayoutBody/>
-
-                <LayoutFooter/>
 
             </div>
         </div>
