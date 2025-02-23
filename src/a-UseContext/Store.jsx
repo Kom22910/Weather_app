@@ -5,12 +5,10 @@ import { createContext , useContext } from "react";
 const APPContext = createContext();
 
 const APPProvider = ({children}) =>{
-    
-    const apiKey = import.meta.env.VITE_API_KEY;
     const url = import.meta.env.VITE_API_URL;
 
     return(
-        <APPContext.Provider value={{ url , apiKey }}>
+        <APPContext.Provider value={{ url }}>
             {children}
         </APPContext.Provider>
     );

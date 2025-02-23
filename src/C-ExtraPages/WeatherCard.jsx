@@ -2,12 +2,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import LayoutHeader from "../B-LayoutSection/LayoutHeader.jsx";
+import LoadingPage from "./LoadingPage.jsx";
+import {useStore} from "../a-UseContext/Store.jsx";
 
 
 const WeatherCard = () => {
-
-    // const { url, apiKey } = useStore();
-
     const nav = useNavigate();
 
     const [data, setData] = useState({});
@@ -18,6 +17,15 @@ const WeatherCard = () => {
         long : null
     })
 
+    const {url} = useStore();
+
+
+    
+
+
+
+    const [loading , setLoading] = useState(false);
+
     
 
 
@@ -25,6 +33,8 @@ const WeatherCard = () => {
 
     const FetchData = async () => {
         try {
+
+            setLoading(true);
             let res = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`);
             const { latitude, longitude, timezone } = res.data.results[0];
 
@@ -33,13 +43,14 @@ const WeatherCard = () => {
                 long : longitude
             })
 
-            let res1 = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,is_day,rain,snowfall,weather_code,cloud_cover&timezone=${timezone}`);
-            console.log(res1.data.current)
-
+            let res1 = await axios.get(`${url}latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,is_day,rain,snowfall,weather_code,cloud_cover,apparent_temperature&timezone=${timezone}`);
             setData(res1.data.current);
         }
         catch (err) {
             console.log(err);
+        }
+        finally{
+            setLoading(false);
         }
     }
 
@@ -157,8 +168,8 @@ const WeatherCard = () => {
 
 
                                         <div className="col-md-5 col-12 m-auto">
-                                            <p className='display-3 fw-bold p1'>{data.temperature_2m}<sup><span className='fs-2'>o</span></sup></p>
-                                            {/* <p className='p2'>Real Feel : {data.main.feels_like} <sup>o</sup></p> */}
+                                            <p className='fw-bold p1'>{data.temperature_2m}<sup><span>o</span></sup> C</p>
+                                            <p className='p2'>Feel like: {data.apparent_temperature} <sup>o</sup></p>
                                         </div>
 
                                     </div>
@@ -181,6 +192,11 @@ const WeatherCard = () => {
             }
 
             </div>
+
+
+
+
+            <LoadingPage  loading={loading}  />
 
 
 

@@ -6,9 +6,13 @@ import LayoutHeader from '../B-LayoutSection/LayoutHeader.jsx';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useStore } from '../a-UseContext/Store.jsx';
+import LoadingPage from "./LoadingPage.jsx";
 
 
 const WeatherDetail = () => {
+
+
+    const {url} = useStore();
 
 
     const nav = useNavigate();
@@ -17,17 +21,23 @@ const WeatherDetail = () => {
     const { city, lat, long } = useParams();
     const [data, setData] = useState();
 
+    const [loading , setLoading] = useState(false);
+
     console.log(city, lat, long);
 
 
 
     const Fetch = async () => {
         try {
-            let res = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`);
+            setLoading(true);
+            let res = await axios.get(`${url}latitude=${lat}&longitude=${long}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,rain,snowfall,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m,wind_gusts_10m`);
             setData(res.data.current);
         }
         catch (err) {
             console.log(err);
+        }
+        finally{
+            setLoading(false);
         }
     }
 
@@ -99,7 +109,7 @@ const WeatherDetail = () => {
 
         setWeather(imgUrl);
 
-    }, [data])
+    })
 
 
 
@@ -125,9 +135,9 @@ const WeatherDetail = () => {
                                     <div className="row">
 
                                         <div className="col-md-10 col-11 m-auto">
-                                            <h3 className='text-center'>{city} Weather </h3>
+                                            <h3 className='text-center'><span style={{textTransform : "capitalize"}}>{city}</span> Weather </h3>
                                             <div className="col-md-5 col-7 m-auto pb-4">
-                                                <img src={weather} alt="" className='d-block w-100' />
+                                                <img src={weather && weather} alt="" className='d-block w-100' />
                                             </div>
                                         </div>
 
@@ -253,18 +263,6 @@ const WeatherDetail = () => {
                                                     </div>
 
 
-                                                    <div className="col-md-10 col-12 m-auto">
-                                                        <div className="row">
-                                                            <div className="col-md-6 col-7">
-                                                                <p><b>Wind gust speed :</b></p>
-                                                            </div>
-
-                                                            <div className="col-md-6 col-5">
-                                                                <p>{data.wind_gusts_10m} km/h</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
 
                                                     <div className="col-md-10 col-12 m-auto">
                                                         <div className="row">
@@ -305,9 +303,9 @@ const WeatherDetail = () => {
                                         </div>
 
 
-                                            <div className="col-6 m-auto text-center mt-4">
+                                            <div className="col-sm-6 col-10 m-auto text-center mt-4">
                                                 <button className='btn btn-success fw-bold mx-4' onClick={()=>nav(`/weather-app/forecast/${city}/${lat}/${long}`)}    >See Weather Forecast</button>
-                                                <button className='btn btn-danger fw-bold' onClick={()=>nav(-1)}>Go back</button>
+                                                <button className='btn btn-danger fw-bold my-sm-0 my-3' onClick={()=>nav(-1)}>Go back</button>
                                             </div>
 
 
@@ -326,6 +324,13 @@ const WeatherDetail = () => {
 
                 </div>
             </div>
+
+
+
+
+
+            <LoadingPage  loading={loading}/>
+
 
         </>
     )

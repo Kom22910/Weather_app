@@ -1,11 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
 import "../A-Globalstyle/Forecast.css";
 import LayoutHeader from "../B-LayoutSection/LayoutHeader";
+import LoadingPage from "./LoadingPage";
+import { useStore } from "../a-UseContext/Store.jsx";
+
 
 const Forecast = () => {
+
+    const nav = useNavigate();
+
+    const {url} = useStore();
+
+    const [loading , setLoading] = useState(false);
 
     const { city, lat, long } = useParams();
 
@@ -14,11 +22,15 @@ const Forecast = () => {
 
     const Fetch = async () => {
         try {
-            let res = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${long}&daily=weather_code,temperature_2m_max,apparent_temperature_max,wind_speed_10m_max`);
+            setLoading(true);
+            let res = await axios.get(`${url}latitude=${lat}&longitude=${long}&daily=weather_code,temperature_2m_max,apparent_temperature_max,wind_speed_10m_max`);
             setData(res.data.daily);
         }
         catch (err) {
             console.log(err);
+        }
+        finally{
+            setLoading(false);
         }
     }
 
@@ -73,86 +85,97 @@ const Forecast = () => {
     }
 
 
-return (
-    <>
+    return (
+        <>
 
 
-        <div className="col-12 weatherForecastPage">
+            <div className="col-12 weatherForecastPage">
 
-            <LayoutHeader />
-
-
-
-            <div className="col-11 m-auto forcastContainer my-3">
-                <div className="row">
+                <LayoutHeader />
 
 
-                    {
-                        data &&
-                        data.weather_code.map((val, index) => {
+                <div className="crossContainer" onClick={()=>nav(-1)}>
+                    <i class="bi bi-x"></i>
+                </div>
 
 
-                            return (
 
-                                <div className="col-md-3 col-10 m-auto my-3" key={index}>
-                                    <div className="col-12 forecastCard py-3">
-
-                                        <div className="col-9 m-auto section1">
-                                            <h4 className="text-center m-auto">{city} </h4>
-                                            <span> {data.time[index]} </span>
-                                        </div>
+                <div className="col-11 m-auto forcastContainer my-3">
+                    <div className="row">
 
 
-                                        <div className="col-11 m-auto my-3 section2">
-                                            <div className="row">
+                        {
+                            data &&
+                            data.weather_code.map((val, index) => {
 
-                                                <div className="col-5 m-auto">
-                                                    <img src={data && days(data.weather_code[index])} alt=" weather" className="d-block w-100" />
-                                                </div>
 
-                                                <div className="col-7 m-auto mt-4">
-                                                    <div className="col-12 m-auto">
+                                return (
 
-                                                        <div className="col-9 m-auto">
-                                                            <div className="row">
-                                                                <h3>{data.temperature_2m_max[index]} <sup>o</sup>C</h3>
+                                    <div className="col-md-3 col-10 mx-md-0 m-auto my-3" key={index}>
+                                        <div className="col-12 forecastCard py-3">
+
+                                            <div className="col-9 m-auto section1">
+                                                <h4 className="text-center m-auto" style={{ textTransform: "capitalize" }}>{city} </h4>
+                                                <span> {data.time[index]} </span>
+                                            </div>
+
+
+                                            <div className="col-11 m-auto my-3 section2">
+                                                <div className="row">
+
+                                                    <div className="col-5 m-auto">
+                                                        <img src={data && days(data.weather_code[index])} alt=" weather" className="d-block w-100" />
+                                                    </div>
+
+                                                    <div className="col-7 m-auto mt-4">
+                                                        <div className="col-12 m-auto">
+
+                                                            <div className="col-9 m-auto">
+                                                                <div className="row">
+                                                                    <h3>{data.temperature_2m_max[index]} <sup>o</sup>C</h3>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="col-9 m-auto">
-                                                            <div className="row">
-                                                                <p>Feel like : {data.apparent_temperature_max[index]} <sup>o</sup>C</p>
+                                                            <div className="col-9 m-auto">
+                                                                <div className="row">
+                                                                    <p>Feel like : {data.apparent_temperature_max[index]} <sup>o</sup>C</p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+
+
                                                 </div>
-
-
                                             </div>
+
                                         </div>
-
                                     </div>
-                                </div>
 
-                            )
-                        })
-                    }
-
+                                )
+                            })
+                        }
 
 
+
+                    </div>
                 </div>
+
+
+
+
+
+
             </div>
 
 
 
+            <LoadingPage  loading={loading}/>
 
 
 
-        </div>
 
 
-
-    </>
-)
+        </>
+    )
 }
 
 export default Forecast;
